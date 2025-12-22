@@ -24,8 +24,14 @@ jobs:
         distribution: 'temurin'
         java-version: 11
 
-    - name: Run Buildozer
+    - name: Run Buildozer (install dependencies)
       uses: digreatbrian/buildozer-action@v2
       with:
         buildozer-cmd: buildozer android debug
         work-dir: .
+
+    - name: Accept Android SDK licenses
+      run: yes | $HOME/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses
+
+    - name: Build APK
+      run: buildozer android debug
