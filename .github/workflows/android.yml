@@ -10,28 +10,34 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+    # 1️⃣ Clonar el repositorio
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # 2️⃣ Configurar Python
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: 3.8
+        python-version: 3.10
 
-    - name: Install Java
+    # 3️⃣ Configurar Java
+    - name: Set up Java
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: 11
 
-    - name: Run Buildozer (install dependencies)
+    # 4️⃣ Instalar Buildozer y dependencias
+    - name: Run Buildozer action
       uses: digreatbrian/buildozer-action@v2
       with:
         buildozer-cmd: buildozer android debug
         work-dir: .
 
+    # 5️⃣ Aceptar licencias del SDK Android
     - name: Accept Android SDK licenses
       run: yes | $HOME/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses
 
+    # 6️⃣ Compilar APK
     - name: Build APK
-      run: buildozer android debug
+      run: buildozer android debug      run: buildozer android debug
