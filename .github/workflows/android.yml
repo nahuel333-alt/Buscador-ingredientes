@@ -1,0 +1,16 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build APK
+      uses: digreatbrian/buildozer-action@v2
+      with:
+        buildozer-cmd: buildozer android debug
