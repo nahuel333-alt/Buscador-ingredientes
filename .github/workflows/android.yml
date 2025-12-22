@@ -43,12 +43,15 @@ jobs:
         yes | $ANDROID_HOME/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses || true
         $ANDROID_HOME/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
-    # 5️⃣ Compilar la APK con Buildozer
-    - name: Build APK
-      run: |
-        buildozer -v android debug
+    # 5️⃣ Definir ANDROID_HOME para Buildozer
+    - name: Set ANDROID_HOME for Buildozer
+      run: echo "export ANDROID_HOME=${GITHUB_WORKSPACE}/android-sdk" >> $GITHUB_ENV
 
-    # 6️⃣ Subir la APK generada como artifact
+    # 6️⃣ Compilar la APK con Buildozer
+    - name: Build APK
+      run: buildozer -v android debug
+
+    # 7️⃣ Subir la APK generada como artifact
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
