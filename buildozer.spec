@@ -5,6 +5,7 @@ package.domain = org.nahuel
 
 source.dir = .
 source.include_exts = py,xlsx
+source.main = main.py
 
 version = 1.0
 
