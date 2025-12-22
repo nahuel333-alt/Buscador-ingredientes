@@ -2,15 +2,30 @@ name: Build APK
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
+    runs-on: ubuntu-22.04
 
-    - name: Build APK
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.8
+
+    - name: Install Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: 11
+
+    - name: Run Buildozer
       uses: digreatbrian/buildozer-action@v2
       with:
         buildozer-cmd: buildozer android debug
+        work-dir: .
