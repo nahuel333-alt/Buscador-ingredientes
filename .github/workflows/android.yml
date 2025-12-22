@@ -11,29 +11,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1️⃣ Traer los archivos del repositorio
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # 2️⃣ Instalar dependencias necesarias en Ubuntu
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y python3-pip python3-dev build-essential git zlib1g-dev \
         libncurses5-dev libncursesw5-dev libtinfo6 libffi-dev libssl-dev \
-        libsqlite3-dev libjpeg-dev libfreetype6-dev openjdk-11-jdk
+        libsqlite3-dev libjpeg-dev libfreetype6-dev openjdk-11-jdk wget unzip
 
+    # 3️⃣ Instalar Buildozer y librerías Python necesarias
     - name: Install Buildozer
       run: |
         pip install --upgrade pip
         pip install cython
         pip install buildozer kivy pandas openpyxl
 
+    # 4️⃣ Aceptar licencias de Android SDK
     - name: Accept Android SDK licenses
-      run: yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || true
+      run: |
+        yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || true
 
+    # 5️⃣ Compilar la APK con Buildozer
     - name: Build APK
       run: |
         buildozer -v android debug
 
+    # 6️⃣ Subir la APK generada como artifact
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
