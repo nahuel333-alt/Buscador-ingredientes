@@ -6,6 +6,7 @@ source.include_exts = py,xlsx
 version = 1.0
 orientation = portrait
 fullscreen = 1
+source.dir = .  # Esto indica que el código está en la raíz del proyecto
 
 # Kivy / Python
 requirements = python3,kivy,numpy,pandas,openpyxl
@@ -20,8 +21,6 @@ android.permissions = INTERNET
 
 # P4A / SDL2
 p4a.bootstrap = sdl2
-p4a.source_dir = ./p4a
-p4a.branch = master
 
 # Packaging
 android.arch = arm64-v8a,armeabi-v7a
