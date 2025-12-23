@@ -58,7 +58,8 @@ jobs:
             colorama \
             importlib-metadata \
             toml \
-            filelock
+            filelock \
+            build
 
       - name: Clone Python-for-Android manually
         run: |
