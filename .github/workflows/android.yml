@@ -32,5 +32,6 @@ jobs:
     - name: Build APK with Buildozer
       run: |
         pip install --upgrade pip
+        pip install cython
         pip install buildozer
         buildozer android debug
