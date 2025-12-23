@@ -8,7 +8,9 @@ source.include_exts = py,xlsx
 
 version = 1.0
 
-requirements = python3,kivy,pandas,openpyxl
+requirements = python3,kivy,numpy,pandas,openpyxl
+p4a.branch = develop
+android.ndk = 25b
 
 orientation = portrait
 fullscreen = 1
