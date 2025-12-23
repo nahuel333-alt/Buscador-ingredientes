@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
+    env:
+      ANDROID_SDK_ROOT: ${{ runner.home }}/android-sdk
+      ANDROID_NDK_HOME: ${{ runner.home }}/android-sdk/ndk/25.2.9519653
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,35 +27,25 @@ jobs:
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel build-essential autoconf automake libtool gettext pkg-config cmake libffi-dev libssl-dev zlib1g-dev libncurses5 wget
 
-      - name: Download Android SDK Command-line tools
-        run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk/cmdline-tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
-          unzip cmdline-tools.zip
-          rm cmdline-tools.zip
-          mv cmdline-tools latest
-
-      - name: Install Android SDK components
-        run: |
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
-
-      - name: Verify autopoint
-        run: |
-          echo "🔍 Checking autopoint..."
-          which autopoint
-          autopoint --version || true  # no falla si no está
-
       - name: Install Buildozer & Cython
         run: |
           pip install --upgrade pip
-          pip install buildozer cython==0.29.36 packaging appdirs build
+          pip install buildozer cython==0.29.36
 
-      - name: Build APK with Buildozer
+      - name: Install Android SDK & NDK
         run: |
-          export ANDROIDSDK=$HOME/android-sdk
-          export ANDROIDNDK=$HOME/android-sdk/ndk/25.2.9519653
-          yes | buildozer android debug
+          mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
+          cd $ANDROID_SDK_ROOT/cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
+          unzip cmdline-tools.zip
+          mv cmdline-tools latest
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-33" "build-tools;33.0.2" "ndk;25.2.9519653"
+
+      - name: Clean previous builds
+        run: buildozer android clean
+
+      - name: Build APK
+        run: yes | buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
