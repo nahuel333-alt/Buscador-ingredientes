@@ -43,13 +43,12 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
           unzip -q tools.zip
           mv cmdline-tools latest
+          
+          # Instalar herramientas esenciales
+          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+          
           # Aceptar licencias
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-          # Instalar herramientas esenciales
-          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
-            "platform-tools" \
-            "platforms;android-33" \
-            "build-tools;33.0.2"
 
       - name: Fix sdkmanager path for Buildozer
         run: |
@@ -65,21 +64,13 @@ jobs:
           echo "$HOME/android-sdk/build-tools/33.0.2" >> $GITHUB_PATH
           echo "$HOME/android-sdk/tools/bin" >> $GITHUB_PATH
 
-      - name: Verify Android SDK tools
+      - name: Verify aidl
         run: |
-          echo "Checking Java..."
-          java -version
-          echo "Checking javac..."
-          javac -version
-          echo "Checking aidl..."
-          if command -v aidl >/dev/null 2>&1; then
-            echo "aidl found"
-          else
-            echo "ERROR: aidl not found"
+          if [ ! -f "$HOME/android-sdk/build-tools/33.0.2/aidl" ]; then
+            echo "ERROR: aidl not found in build-tools!"
+            ls -l $HOME/android-sdk/build-tools/
             exit 1
           fi
-          echo "Checking sdkmanager..."
-          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --list
 
       - name: Build APK
         run: |
