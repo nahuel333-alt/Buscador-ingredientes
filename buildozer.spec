@@ -1,49 +1,54 @@
 [app]
-# Nombre de la aplicación
+# (str) Title of your application
 title = Buscador Ingredientes
-# Nombre del paquete (recomendado en minúsculas)
+
+# (str) Package name
 package.name = buscadoringredientes
-# Dominio de tu app (no obligatorio, pero se recomienda)
+
+# (str) Package domain (reverse domain style)
 package.domain = org.nahuel
-# Carpeta donde está el código fuente
+
+# (str) Source code where your main.py is located
 source.dir = .
-# Archivo principal de Python
+
+# (str) Main application entry point
 source.main = main.py
-# Lista de requisitos de Python
-requirements = python3,kivy,numpy,pandas,openpyxl
-# Icono de la app (opcional)
-# icon.filename = %(source.dir)s/icon.png
-# Orientación de la app
-orientation = portrait
-# Indica si la app se puede instalar en tablet
-fullscreen = 1
-# Versión de la app
+
+# (list) List of inclusions using pattern matching
+source.include_exts = py,png,jpg,kv,txt,xlsx
+
+# (str) Application versioning
 version = 1.0
-# SDL2 es el bootstrap recomendado para Android
+
+# (list) Application requirements
+requirements = python3,kivy,numpy,pandas,openpyxl
+
+# (str) Presplash / Icon
+icon.filename = %(source.dir)s/icon.png
+
+# (list) Permissions
+android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
+
+# (str) Target Android API
+android.api = 33
+android.minapi = 24
+android.sdk = 33
+android.ndk = 25b
+android.ndk_api = 24
+android.arch = arm64-v8a,armeabi-v7a
+
+# (str) Bootstrap (deprecated, kept for backward compatibility)
 p4a.bootstrap = sdl2
 
+# (bool) Copy libraries to APK
+android.copy_libs = 1
+
+# (str) Orientation
+orientation = portrait
+
+# (bool) Fullscreen
+fullscreen = 0
+
 [buildozer]
-# Directorio donde se guardarán los builds
-build_dir = .buildozer
-# Nivel de log (0=minimal, 2=debug)
 log_level = 2
-# Directorio donde se almacenan archivos temporales
-# bin_dir = bin (por defecto)
-# Comando para limpiar después de construir
-# clean_build = True
-
-[android]
-# Versión mínima de Android
-android.minapi = 24
-# Versión objetivo de Android
-android.api = 33
-# Versión del NDK (opcional, Buildozer lo descarga)
-# android.ndk = 25b
-# SDK Build-tools
-android.build_tools_version = 33.0.2
-# Activar permisos si es necesario
-# android.permissions = INTERNET
-# Si se requiere orientación por pantalla
-# android.orientation = portrait
-
-# Se pueden agregar más opciones aquí según tu app
+warn_on_root = 1
