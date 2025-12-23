@@ -29,7 +29,7 @@ jobs:
           sudo apt update
           sudo apt install -y \
             git zip unzip python3-pip python3-setuptools python3-wheel \
-            libffi-dev libssl-dev zlib1g-dev libncurses5 automake autoconf gettext
+            libffi-dev libssl-dev zlib1g-dev libncurses5 automake autoconf gettext wget
 
       - name: Install Buildozer
         run: |
@@ -41,10 +41,12 @@ jobs:
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk/cmdline-tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
-          unzip -q tools.zip
-          mv cmdline-tools/* latest/  # <--- Fijate esto: los contenidos van directo en latest/
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
+          mkdir latest
+          unzip -q tools.zip -d latest
+          # Aceptar licencias
+          yes | $HOME/android-sdk/cmdline-tools/latest/cmdline-tools/bin/sdkmanager --licenses
+          # Instalar herramientas esenciales
+          $HOME/android-sdk/cmdline-tools/latest/cmdline-tools/bin/sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
             "build-tools;33.0.2"
@@ -52,7 +54,7 @@ jobs:
       - name: Fix sdkmanager path for Buildozer
         run: |
           mkdir -p $HOME/android-sdk/tools/bin
-          ln -sf $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
+          ln -s $HOME/android-sdk/cmdline-tools/latest/cmdline-tools/bin/sdkmanager \
                 $HOME/android-sdk/tools/bin/sdkmanager
 
       - name: Export Android paths
