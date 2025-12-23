@@ -50,7 +50,7 @@ jobs:
             "ndk;25.2.9519653"
 
       - name: Clean previous builds
-        run: buildozer android clean
+        run: yes | buildozer android clean
 
       - name: Build APK
         run: yes | buildozer android debug
