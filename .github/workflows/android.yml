@@ -32,10 +32,10 @@ jobs:
             openjdk-17-jdk \
             python3-pip python3-setuptools python3-wheel \
             build-essential \
-            autoconf automake libtool gettext \
+            autoconf automake libtool \
+            gettext gettext-base \
             pkg-config cmake \
-            libffi-dev libssl-dev zlib1g-dev libncurses5 \
-            autoconf automake libtool gettext
+            libffi-dev libssl-dev zlib1g-dev libncurses5
 
       - name: Install Buildozer
         run: |
