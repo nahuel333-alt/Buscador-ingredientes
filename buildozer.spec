@@ -45,7 +45,7 @@ android.ndk = 25b
 android.ndk_api = 24
 
 # (str) Bootstrap to use (SDL2 recommended)
-android.bootstrap = sdl2
+p4a.bootstrap = sdl2
 
 # (list) Application requirements
 requirements = python3,kivy,numpy,pandas,openpyxl
