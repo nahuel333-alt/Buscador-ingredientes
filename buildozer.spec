@@ -1,37 +1,40 @@
 [app]
-# Nombre y paquete de tu app
+# Nombre y paquete
 title = Buscador Ingredientes
 package.name = buscadoringredientes
 package.domain = org.nahuel
 
-# Carpeta con tu código fuente
+# Directorio de código fuente
 source.dir = .
+source.include_exts = py,png,jpg,kv,txt
 
-# Requerimientos de Python y librerías
-requirements = python3,kivy,numpy,pandas,openpyxl,cython==0.29.36
+# Versión de la app
+version = 1.0
 
-# Permisos de Android (si necesitás alguno, agregalos aquí)
-#android.permissions = INTERNET
+# Orientación y pantalla
+orientation = portrait
+fullscreen = 0
 
-# Licencias y actualizaciones
+# Dependencias
+requirements = python3,kivy,numpy,pandas,openpyxl
+
+# Android
+android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+android.minapi = 24
+android.sdk = 33
 android.accept_sdk_license = True
-#android.skip_update = True
-
-# Opciones del bootstrap (SDL2 recomendado)
 p4a.bootstrap = sdl2
 
-# Arquitecturas soportadas
-android.arch = arm64-v8a,armeabi-v7a
-
-# Nivel mínimo de API de Android
-android.minapi = 24
-android.api = 33
-android.ndk = 25b
-android.ndk_api = 24
-android.sdk = 33
-
-# Copiar librerías al APK
-android.copy_libs = 1
-
-# Directorios de logs y compilación
+# Logging
 log_level = 2
+
+# Opciones varias
+# Evitar que Buildozer intente actualizar SDK automáticamente (útil en CI)
+android.skip_update = True
+
+# Archivos a ignorar
+ignore_patterns = *.pyc, *.pyo, *.git, __pycache__
+
+# Otras configuraciones útiles
+presplash.filename = %(source.dir)s/data/presplash.png
+icon.filename = %(source.dir)s/data/icon.png
