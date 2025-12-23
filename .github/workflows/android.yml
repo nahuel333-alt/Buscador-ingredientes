@@ -34,7 +34,8 @@ jobs:
             build-essential \
             autoconf automake libtool gettext \
             pkg-config cmake \
-            libffi-dev libssl-dev zlib1g-dev libncurses5
+            libffi-dev libssl-dev zlib1g-dev libncurses5 \
+            autoconf automake libtool gettext
 
       - name: Install Buildozer
         run: |
