@@ -1,53 +1,26 @@
 [app]
-# (str) Title of your application
+# Nombre de la aplicación
 title = Buscador Ingredientes
-
-# (str) Package name
 package.name = buscadoringredientes
-
-# (str) Package domain (reverse domain style)
 package.domain = org.nahuel
-
-# (str) Source code where your main.py is located
 source.dir = .
-
-# (str) Main application entry point
-source.main = main.py
-
-# (list) List of inclusions using pattern matching
-source.include_exts = py,png,jpg,kv,txt,xlsx
-
-# (str) Application versioning
-version = 1.0
-
-# (list) Application requirements
+source.include_exts = py,png,jpg,kv,atlas
+version = 1.0.0
 requirements = python3,kivy,numpy,pandas,openpyxl
-
-# (str) Presplash / Icon
-icon.filename = %(source.dir)s/icon.png
-
-# (list) Permissions
-android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
-
-# (str) Target Android API
+orientation = portrait
+fullscreen = 1
 android.api = 33
 android.minapi = 24
+android.arch = armeabi-v7a,arm64-v8a
 android.sdk = 33
 android.ndk = 25b
 android.ndk_api = 24
-android.arch = arm64-v8a,armeabi-v7a
+android.private_storage = True
+android.bootstrap = sdl2
 
-# (str) Bootstrap (deprecated, kept for backward compatibility)
-p4a.bootstrap = sdl2
-
-# (bool) Copy libraries to APK
-android.copy_libs = 1
-
-# (str) Orientation
-orientation = portrait
-
-# (bool) Fullscreen
-fullscreen = 0
+# Mantener permisos y configuraciones de Android
+android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
+android.whitelist = *
 
 [buildozer]
 log_level = 2
