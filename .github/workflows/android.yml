@@ -21,16 +21,19 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt update
+          # He eliminado 'gettext-bin' de la lista de abajo
           sudo apt install -y \
             git zip unzip \
             openjdk-17-jdk \
             python3-pip python3-setuptools python3-wheel \
             build-essential \
             autoconf automake libtool \
-            gettext gettext-bin \
+            gettext \
             pkg-config cmake \
             libffi-dev libssl-dev zlib1g-dev libncurses5
 
+      - name: Verify autopoint
+        run: |
           echo "🔍 Checking autopoint..."
           which autopoint
           autopoint --version
@@ -38,19 +41,13 @@ jobs:
       - name: Install Buildozer & Cython
         run: |
           pip install --upgrade pip
+          # Cython 0.29.36 es correcto para la mayoría de versiones actuales de Kivy
           pip install buildozer cython==0.29.36
 
-      - name: Set Android SDK environment variables
-        run: |
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "ANDROID_NDK_HOME=$HOME/android-sdk/ndk" >> $GITHUB_ENV
-          echo "PATH=$HOME/android-sdk/tools/bin:$HOME/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
-          echo "ACCEPT_EULA=Y" >> $GITHUB_ENV
-
       - name: Build APK with Buildozer
+        # Usamos 'yes' para aceptar automáticamente las licencias del SDK de Android si Buildozer las pide
         run: |
-          buildozer android debug
+          yes | buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
