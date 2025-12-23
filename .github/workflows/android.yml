@@ -27,7 +27,7 @@ jobs:
             python3-pip python3-setuptools python3-wheel \
             build-essential \
             autoconf automake libtool \
-            gettext \
+            gettext gettext-bin \
             pkg-config cmake \
             libffi-dev libssl-dev zlib1g-dev libncurses5
 
