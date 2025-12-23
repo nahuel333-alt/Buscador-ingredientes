@@ -48,7 +48,8 @@ jobs:
             requests \
             six \
             virtualenv \
-            cython
+            cython \
+            packaging
 
       - name: Clone Python-for-Android manually
         run: |
