@@ -22,64 +22,44 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y \
-            git zip unzip wget curl \
+            git zip unzip \
             openjdk-17-jdk \
             python3-pip python3-setuptools python3-wheel \
-            build-essential autoconf automake libtool autopoint \
-            gettext pkg-config cmake \
-            libffi-dev libssl-dev zlib1g-dev \
-            libncurses5-dev libncursesw5-dev \
-            libsqlite3-dev libbz2-dev libreadline-dev \
-            libgdbm-dev liblzma-dev tk-dev \
-            libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
-            libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev \
-            libfreetype6-dev
+            build-essential \
+            autoconf automake libtool \
+            gettext \
+            pkg-config cmake \
+            libffi-dev libssl-dev zlib1g-dev libncurses5
 
-      - name: Install Buildozer & Cython
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install buildozer cython==0.29.36
-
-      - name: Install Python-for-Android dependencies
+      - name: Install Python dependencies for Buildozer
         run: |
           python3 -m pip install --upgrade pip
           pip install \
+            buildozer \
+            cython==0.29.36 \
             appdirs \
             packaging \
             jinja2 \
-            setuptools \
-            sh \
+            build \
             requests \
             six \
             virtualenv \
-            cython \
-            certifi \
-            attrs \
-            colorama \
-            importlib-metadata \
-            toml \
-            filelock \
-            build
+            setuptools
 
-      - name: Clone Python-for-Android manually
-        run: |
-          mkdir -p .buildozer/android/platform
-          cd .buildozer/android/platform
-          git clone -b master https://github.com/kivy/python-for-android.git
+      - name: Verify Buildozer version
+        run: buildozer --version
 
       - name: Build APK with Buildozer
         run: |
-          buildozer android clean
-          yes | buildozer -v android debug --log-level=2 2>&1 | tee buildozer.log
+          yes | buildozer android debug
+
+      - name: List build output
+        run: |
+          echo "📂 Listing APKs generated:"
+          find ./.buildozer -name "*.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: bin/*.apk
-
-      - name: Upload Buildozer logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: buildozer-logs
-          path: buildozer.log
+          path: ./.buildozer/android/platform/build/*/build/outputs/apk/debug/*.apk
