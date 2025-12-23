@@ -1,63 +1,37 @@
 [app]
-
-# (str) Title of your application
+# Nombre y paquete de tu app
 title = Buscador Ingredientes
-
-# (str) Package name
 package.name = buscadoringredientes
-
-# (str) Package domain (reverse DNS notation)
 package.domain = org.nahuel
 
-# (str) Source code where the main.py is located
+# Carpeta con tu código fuente
 source.dir = .
 
-# (str) Application version
-version = 1.0.0
+# Requerimientos de Python y librerías
+requirements = python3,kivy,numpy,pandas,openpyxl,cython==0.29.36
 
-# (list) Requirements separated by commas
-requirements = python3,kivy,numpy,pandas,openpyxl
+# Permisos de Android (si necesitás alguno, agregalos aquí)
+#android.permissions = INTERNET
 
-# (str) Entry point of the app
-entrypoint = main.py
+# Licencias y actualizaciones
+android.accept_sdk_license = True
+#android.skip_update = True
 
-# (list) Permissions required
-android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE
-
-# (str) Android SDK version to use (deprecated in favor of p4a)
-# android.sdk = 33
-
-# (str) Python-for-Android bootstrap
+# Opciones del bootstrap (SDL2 recomendado)
 p4a.bootstrap = sdl2
 
-# (list) Supported architectures
-android.archs = arm64-v8a,armeabi-v7a
+# Arquitecturas soportadas
+android.arch = arm64-v8a,armeabi-v7a
 
-# (bool) Copy libraries instead of linking
+# Nivel mínimo de API de Android
+android.minapi = 24
+android.api = 33
+android.ndk = 25b
+android.ndk_api = 24
+android.sdk = 33
+
+# Copiar librerías al APK
 android.copy_libs = 1
 
-# (str) Minimum Android API your app supports
-android.minapi = 24
-
-# (str) Target Android API
-android.api = 33
-
-# (str) Build-tools version
-android.build_tools_version = 33.0.2
-
-# (bool) Enable debug mode
-android.debug = 1
-
-# (str) Directory for temporary build files
-build_dir = .buildozer
-
-# (str) Android NDK version (optional)
-# android.ndk = 25b
-
-# (list) Exclude any modules not needed
-# exclude_modules =
-
-[buildozer]
-
-# (str) Path to Buildozer bin (usually default)
-build_dir = .buildozer
+# Directorios de logs y compilación
+log_level = 2
