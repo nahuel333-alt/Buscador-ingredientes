@@ -21,16 +21,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y \
-            git zip unzip openjdk-17-jdk \
-            python3-pip python3-setuptools python3-wheel \
-            build-essential autoconf automake libtool \
-            gettext pkg-config cmake libffi-dev libssl-dev zlib1g-dev libncurses5 wget
-
-      - name: Install Python dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install buildozer cython==0.29.36 appdirs packaging jinja2 build requests six virtualenv setuptools
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel build-essential autoconf automake libtool gettext pkg-config cmake libffi-dev libssl-dev zlib1g-dev libncurses5 wget
 
       - name: Download Android SDK Command-line tools
         run: |
@@ -41,26 +32,29 @@ jobs:
           rm cmdline-tools.zip
           mv cmdline-tools latest
 
-      - name: Install Android SDK packages
-        env:
-          ANDROID_SDK_ROOT: $HOME/android-sdk
+      - name: Install Android SDK components
         run: |
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
-      - name: Verify Buildozer version
-        run: buildozer --version
+      - name: Verify autopoint
+        run: |
+          echo "🔍 Checking autopoint..."
+          which autopoint
+          autopoint --version || true  # no falla si no está
+
+      - name: Install Buildozer & Cython
+        run: |
+          pip install --upgrade pip
+          pip install buildozer cython==0.29.36 packaging appdirs build
 
       - name: Build APK with Buildozer
         run: |
+          export ANDROIDSDK=$HOME/android-sdk
+          export ANDROIDNDK=$HOME/android-sdk/ndk/25.2.9519653
           yes | buildozer android debug
-
-      - name: List build output
-        run: |
-          echo "📂 Listing APKs generated:"
-          find ./.buildozer -name "*.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: ./.buildozer/android/platform/build/*/build/outputs/apk/debug/*.apk
+          path: bin/*.apk
