@@ -28,7 +28,9 @@ jobs:
             build-essential autoconf automake libtool autopoint \
             gettext pkg-config cmake \
             libffi-dev libssl-dev zlib1g-dev \
-            libncurses5-dev libncursesw5-dev
+            libncurses5-dev libncursesw5-dev \
+            libsqlite3-dev libbz2-dev libreadline-dev \
+            libgdbm-dev liblzma-dev tk-dev
 
       - name: Install Buildozer & Cython
         run: |
@@ -37,7 +39,16 @@ jobs:
 
       - name: Install Python-for-Android dependencies
         run: |
-          python3 -m pip install appdirs
+          python3 -m pip install --upgrade pip
+          pip install \
+            appdirs \
+            jinja2 \
+            setuptools \
+            sh \
+            requests \
+            six \
+            virtualenv \
+            cython
 
       - name: Clone Python-for-Android manually
         run: |
