@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
-      ANDROID_SDK_ROOT: ${{ runner.home }}/android-sdk
-      ANDROID_NDK_HOME: ${{ runner.home }}/android-sdk/ndk/25.2.9519653
+      ANDROID_SDK_ROOT: $HOME/android-sdk
+      ANDROID_NDK_HOME: $HOME/android-sdk/ndk/25.2.9519653
 
     steps:
       - name: Checkout repository
