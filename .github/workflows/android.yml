@@ -42,6 +42,7 @@ jobs:
           python3 -m pip install --upgrade pip
           pip install \
             appdirs \
+            packaging \
             jinja2 \
             setuptools \
             sh \
@@ -49,7 +50,12 @@ jobs:
             six \
             virtualenv \
             cython \
-            packaging
+            certifi \
+            attrs \
+            colorama \
+            importlib-metadata \
+            toml \
+            filelock
 
       - name: Clone Python-for-Android manually
         run: |
