@@ -11,19 +11,23 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      # 1️⃣ Clonar repo
       - uses: actions/checkout@v4
 
+      # 2️⃣ Configurar Java 17
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
+      # 3️⃣ Configurar Python 3.10
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
+      # 4️⃣ Instalar dependencias del sistema
       - name: Install system dependencies
         run: |
           sudo apt update
@@ -31,13 +35,15 @@ jobs:
             git zip unzip \
             python3-pip python3-setuptools python3-wheel \
             libffi-dev libssl-dev zlib1g-dev libncurses5 \
-            gettext autoconf automake libtool pkg-config
+            automake autoconf autopoint libtool
 
+      # 5️⃣ Instalar Buildozer y Cython
       - name: Install Buildozer
         run: |
           python -m pip install --upgrade pip
           pip install buildozer cython==0.29.36
 
+      # 6️⃣ Instalar Android SDK
       - name: Install Android SDK
         run: |
           mkdir -p $HOME/android-sdk/cmdline-tools
@@ -46,18 +52,20 @@ jobs:
           unzip -q tools.zip
           mv cmdline-tools latest
 
+      # 7️⃣ Aceptar licencias y instalar build-tools correctos
+      - name: Accept Android licenses and install build-tools
+        run: |
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
-            "platform-tools" \
-            "platforms;android-33" \
-            "build-tools;33.0.2"
+          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
+      # 8️⃣ Ajustar path para Buildozer
       - name: Fix sdkmanager path for Buildozer
         run: |
           mkdir -p $HOME/android-sdk/tools/bin
           ln -s $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
                 $HOME/android-sdk/tools/bin/sdkmanager
 
+      # 9️⃣ Exportar variables de entorno
       - name: Export Android paths
         run: |
           echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
@@ -66,10 +74,12 @@ jobs:
           echo "$HOME/android-sdk/build-tools/33.0.2" >> $GITHUB_PATH
           echo "$HOME/android-sdk/tools/bin" >> $GITHUB_PATH
 
+      # 🔟 Construir APK con Buildozer
       - name: Build APK
         run: |
           buildozer -v android debug
 
+      # 1️⃣1️⃣ Subir APK generado
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
