@@ -35,11 +35,15 @@ jobs:
           python3 -m pip install --upgrade pip
           pip install buildozer cython==0.29.36
 
+      - name: Clone Python-for-Android manually
+        run: |
+          mkdir -p .buildozer/android/platform
+          cd .buildozer/android/platform
+          git clone -b master https://github.com/kivy/python-for-android.git
+
       - name: Build APK with Buildozer
         run: |
-          # Limpiar builds anteriores por si acaso
           buildozer android clean
-          # Construir APK debug, Buildozer descargará SDK/NDK automáticamente
           yes | buildozer -v android debug
 
       - name: Upload APK
