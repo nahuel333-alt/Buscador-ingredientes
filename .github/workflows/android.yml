@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
-      ANDROID_SDK_ROOT: $HOME/android-sdk
-      ANDROID_NDK_HOME: $HOME/android-sdk/ndk/25.2.9519653
+      ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+      ANDROID_NDK_HOME: ${{ github.workspace }}/android-sdk/ndk/25.2.9519653
 
     steps:
       - name: Checkout repository
@@ -38,8 +38,16 @@ jobs:
           cd $ANDROID_SDK_ROOT/cmdline-tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
           unzip cmdline-tools.zip
-          mv cmdline-tools latest
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-33" "build-tools;33.0.2" "ndk;25.2.9519653"
+          # Mover la carpeta interna a "latest"
+          mv cmdline-tools/cmdline-tools latest || mv cmdline-tools latest
+          # Aceptar licencias
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
+          # Instalar herramientas
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;33.0.2" \
+            "ndk;25.2.9519653"
 
       - name: Clean previous builds
         run: buildozer android clean
