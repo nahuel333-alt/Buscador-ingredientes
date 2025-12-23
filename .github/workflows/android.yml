@@ -11,27 +11,33 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y openjdk-17-jdk unzip zip
+        sudo apt install -y openjdk-17-jdk unzip zip wget
 
     - name: Install Android SDK
       run: |
-        mkdir -p $HOME/android-sdk
-        cd $HOME/android-sdk
+        export ANDROID_HOME=$HOME/android-sdk
+        export ANDROID_SDK_ROOT=$ANDROID_HOME
+        mkdir -p $ANDROID_HOME/cmdline-tools
+        cd $ANDROID_HOME/cmdline-tools
+
         wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
         unzip commandlinetools-linux-*.zip
-        mkdir -p cmdline-tools/latest
-        mv cmdline-tools/* cmdline-tools/latest/ || true
-        export ANDROID_HOME=$HOME/android-sdk
+        mv cmdline-tools latest
+
         export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+
         yes | sdkmanager --licenses
         sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
     - name: Build APK with Buildozer
       run: |
+        export ANDROID_HOME=$HOME/android-sdk
+        export ANDROID_SDK_ROOT=$ANDROID_HOME
+        export PATH=$ANDROID_HOME/build-tools/33.0.2:$ANDROID_HOME/platform-tools:$PATH
+
         pip install --upgrade pip
-        pip install cython
-        pip install buildozer
-        buildozer android debug
+        pip install cython buildozer
+        buildozer android debug        buildozer android debug
