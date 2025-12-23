@@ -13,7 +13,7 @@ version = 1.0
 
 # Orientación y pantalla
 orientation = portrait
-fullscreen = 0
+fullscreen = 1
 
 # Dependencias
 requirements = python3,kivy,numpy,pandas,openpyxl
