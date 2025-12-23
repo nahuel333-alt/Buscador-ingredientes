@@ -13,6 +13,6 @@ requirements = python3,kivy,pandas,openpyxl
 orientation = portrait
 fullscreen = 1
 
+android.api = 33
 android.minapi = 21
 android.build_tools = 33.0.2
-android.sdk = 33
