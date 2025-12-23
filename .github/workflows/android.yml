@@ -43,12 +43,15 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
           unzip -q tools.zip
           mv cmdline-tools latest
-          
-          # Instalar herramientas esenciales
-          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
-          
+
           # Aceptar licencias
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+
+          # Instalar herramientas esenciales y build-tools 30.0.3
+          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;30.0.3"
 
       - name: Fix sdkmanager path for Buildozer
         run: |
@@ -61,13 +64,13 @@ jobs:
           echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
-          echo "$HOME/android-sdk/build-tools/33.0.2" >> $GITHUB_PATH
+          echo "$HOME/android-sdk/build-tools/30.0.3" >> $GITHUB_PATH
           echo "$HOME/android-sdk/tools/bin" >> $GITHUB_PATH
 
-      - name: Verify aidl
+      - name: Check aidl
         run: |
-          if [ ! -f "$HOME/android-sdk/build-tools/33.0.2/aidl" ]; then
-            echo "ERROR: aidl not found in build-tools!"
+          if [ ! -f "$HOME/android-sdk/build-tools/30.0.3/aidl" ]; then
+            echo "ERROR: aidl not found!"
             ls -l $HOME/android-sdk/build-tools/
             exit 1
           fi
