@@ -1,3 +1,4 @@
+from kivy.utils import platform
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -9,13 +10,19 @@ import pandas as pd
 import os
 
 # ================= CONFIG =================
-ARCH_SEL = "seleccionados.txt"
-ARCH_EF = "efectos_prohibidos.txt"
+ARCH_SEL = ruta_archivo("seleccionados.txt")
+ARCH_EF = ruta_archivo("efectos_prohibidos.txt")
 
 COLOR_NORMAL = (1, 1, 1, 1)
 COLOR_ROJO = (1, 0, 0, 1)
 
 # ================= UTIL =================
+def ruta_archivo(nombre):
+    if platform == "android":
+        return os.path.join(App.get_running_app().user_data_dir, nombre)
+    else:
+        return nombre
+        
 def cargar_archivo(nombre):
     if not os.path.exists(nombre):
         return set()
@@ -27,8 +34,12 @@ def guardar_archivo(nombre, data):
         for x in sorted(data):
             f.write(x + "\n")
 
-# ================= DATOS =================
-df = pd.read_excel("SK.xlsx", usecols=[0, 1], names=["ingrediente", "efecto"], header=0)
+# ================= DATOS =================df = pd.read_excel(
+    ruta_archivo("SK.xlsx"),
+    usecols=[0, 1],
+    names=["ingrediente", "efecto"],
+    header=0
+)
 df["ingrediente"] = df["ingrediente"].astype(str).str.lower().str.strip()
 df["efecto"] = df["efecto"].astype(str).str.lower().str.strip()
 
