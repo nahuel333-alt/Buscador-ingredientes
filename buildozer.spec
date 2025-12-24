@@ -20,8 +20,6 @@ android.minapi = 24
 android.ndk = 25b
 android.ndk_api = 24
 
-android.skip_update = True
-
 # Copiar librerías
 android.copy_libs = 1
 
