@@ -32,9 +32,9 @@ def asegurar_excel():
     if not os.path.exists(destino):
         origen = resource_find("SK.xlsx")
         if origen is None:
-            return False, "No se encontró SK.xlsx en recursos"
-        try:
-            shutil.copy(origen, destino)
+            print("¡No se encontró SK.xlsx en recursos!")  # <- ayuda a debug
+            raise FileNotFoundError("No se encontró SK.xlsx en recursos")
+        shutil.copy(origen, destino)
         except Exception as e:
             return False, f"Error copiando SK.xlsx: {e}"
     return True, ""
