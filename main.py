@@ -21,16 +21,23 @@ def ruta_archivo(nombre):
 def cargar_archivo(nombre):
     if not os.path.exists(nombre):
         return set()
-    with open(nombre, "r", encoding="utf-8") as f:
-        return set(l.strip() for l in f if l.strip())
+    try:
+        with open(nombre, "r", encoding="utf-8") as f:
+            return set(l.strip() for l in f if l.strip())
+    except Exception:
+        return set()
 
 def asegurar_excel():
     destino = ruta_archivo("SK.xlsx")
     if not os.path.exists(destino):
         origen = resource_find("SK.xlsx")
         if origen is None:
-            raise FileNotFoundError("No se encontró SK.xlsx en recursos")
-        shutil.copy(origen, destino)
+            return False, "No se encontró SK.xlsx en recursos"
+        try:
+            shutil.copy(origen, destino)
+        except Exception as e:
+            return False, f"Error copiando SK.xlsx: {e}"
+    return True, ""
 
 def guardar_archivo(nombre, data):
     with open(nombre, "w", encoding="utf-8") as f:
@@ -44,20 +51,34 @@ COLOR_ROJO = (1, 0, 0, 1)
 # ================= APP =================
 class IngredientesApp(App):
     def build(self):
-        # ================= DATOS =================
-        asegurar_excel()
+        # Layout principal de error
+        root = BoxLayout(orientation="vertical", padding=20)
+        self.error_label = Label(text="", font_size=28)
+        root.add_widget(self.error_label)
+
+        # Aseguro Excel
+        ok, msg = asegurar_excel()
+        if not ok:
+            self.error_label.text = msg
+            return root
+
+        # Datos
         self.seleccionados = cargar_archivo(ruta_archivo("seleccionados.txt"))
         self.efectos_prohibidos = cargar_archivo(ruta_archivo("efectos_prohibidos.txt"))
         self.ingrediente_base = ""
         self.efecto_base = ""
 
-        # Cargo el Excel
-        df = pd.read_excel(
-            ruta_archivo("SK.xlsx"),
-            usecols=[0, 1],
-            names=["ingrediente", "efecto"],
-            header=0
-        )
+        try:
+            df = pd.read_excel(
+                ruta_archivo("SK.xlsx"),
+                usecols=[0, 1],
+                names=["ingrediente", "efecto"],
+                header=0
+            )
+        except Exception as e:
+            self.error_label.text = f"Error leyendo SK.xlsx:\n{e}"
+            return root
+
         df["ingrediente"] = df["ingrediente"].astype(str).str.lower().str.strip()
         df["efecto"] = df["efecto"].astype(str).str.lower().str.strip()
         self.df = df
@@ -139,7 +160,6 @@ class MenuScreen(Screen):
     def ir(self, p):
         self.app.sm.current = p
 
-# ================= Elegir Ingrediente =================
 class ElegirIngredienteScreen(Screen):
     def __init__(self, app, **kwargs):
         super().__init__(**kwargs)
@@ -159,8 +179,13 @@ class ElegirIngredienteScreen(Screen):
         self.lista.clear_widgets()
         prohibidos = self.app.df[self.app.df["efecto"].isin(self.app.efectos_prohibidos)]["ingrediente"].unique()
         for ing in sorted(self.app.seleccionados):
-            btn = Button(text=ing, font_size=34, height=110, size_hint_y=None,
-                         color=COLOR_ROJO if ing in prohibidos else COLOR_NORMAL)
+            btn = Button(
+                text=ing,
+                font_size=34,
+                height=110,
+                size_hint_y=None,
+                color=COLOR_ROJO if ing in prohibidos else COLOR_NORMAL
+            )
             btn.bind(on_press=lambda b, i=ing: self.mostrar(i))
             self.lista.add_widget(btn)
 
@@ -171,7 +196,6 @@ class ElegirIngredienteScreen(Screen):
     def volver(self):
         self.app.sm.current = "menu"
 
-# ================= Elegir Efecto =================
 class ElegirEfectoScreen(Screen):
     def __init__(self, app, **kwargs):
         super().__init__(**kwargs)
@@ -215,7 +239,6 @@ class ElegirEfectoScreen(Screen):
     def volver(self):
         self.app.sm.current = "menu"
 
-# ================= Resultados =================
 class ResultadoIngredienteScreen(Screen):
     def __init__(self, app, **kwargs):
         super().__init__(**kwargs)
@@ -235,9 +258,10 @@ class ResultadoIngredienteScreen(Screen):
         base = self.app.ingrediente_base
         sel = self.app.seleccionados
         efectos_base = sorted(self.app.df[self.app.df["ingrediente"] == base]["efecto"].unique())
-        texto = ["Ingrediente seleccionado:", base, "", "Efectos de este ingrediente:"]
-        texto += [f"- {e}" for e in efectos_base]
-        texto += ["", "Otros ingredientes que comparten al menos uno de estos efectos:", ""]
+        texto = [f"Ingrediente seleccionado:\n{base}", "", "Efectos de este ingrediente:"]
+        for e in efectos_base:
+            texto.append(f"- {e}")
+        texto.append("\nOtros ingredientes que comparten al menos uno de estos efectos:\n")
         hay_coincidencias = False
         for ing in sorted(sel):
             if ing == base:
@@ -247,7 +271,8 @@ class ResultadoIngredienteScreen(Screen):
             if comunes:
                 hay_coincidencias = True
                 texto.append(ing)
-                texto += [f"  • {c}" for c in sorted(comunes)]
+                for c in sorted(comunes):
+                    texto.append(f"  • {c}")
                 texto.append("")
         if not hay_coincidencias:
             texto.append("No hay otros ingredientes que compartan estos efectos.")
@@ -265,6 +290,5 @@ class ResultadoEfectoScreen(ResultadoIngredienteScreen):
     def volver(self):
         self.app.sm.current = "elige_efecto"
 
-# ================= RUN =================
 if __name__ == "__main__":
     IngredientesApp().run()
