@@ -4,6 +4,7 @@ title = Buscador Ingredientes
 package.name = buscadoringredientes
 package.domain = org.nahuel
 source.dir = .
+source.include_exts = py,kv,xlsx,txt
 version = 1.0.0
 requirements = python3,kivy,numpy,pandas,openpyxl
 orientation = portrait
