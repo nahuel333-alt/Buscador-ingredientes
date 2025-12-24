@@ -1,3 +1,5 @@
+from kivy.resources import resource_find
+import shutil
 from kivy.utils import platform
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -29,12 +31,22 @@ def cargar_archivo(nombre):
     with open(nombre, "r", encoding="utf-8") as f:
         return set(l.strip() for l in f if l.strip())
 
+def asegurar_excel():
+    destino = ruta_archivo("SK.xlsx")
+    if not os.path.exists(destino):
+        origen = resource_find("SK.xlsx")
+        if origen is None:
+            raise FileNotFoundError("No se encontró SK.xlsx en recursos")
+        shutil.copy(origen, destino)
+
 def guardar_archivo(nombre, data):
     with open(nombre, "w", encoding="utf-8") as f:
         for x in sorted(data):
             f.write(x + "\n")
 
 # ================= DATOS =================
+asegurar_excel()
+
 df = pd.read_excel(
     ruta_archivo("SK.xlsx"),
     usecols=[0, 1],
