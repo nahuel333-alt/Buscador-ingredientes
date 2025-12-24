@@ -15,7 +15,7 @@ android.accept_sdk_license = True
 p4a.bootstrap = sdl2
 
 # Configuración de la API
-android.api = 33
+android.api = 24
 android.minapi = 24
 android.ndk = 25b
 android.ndk_api = 24
