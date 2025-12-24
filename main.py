@@ -34,7 +34,8 @@ def guardar_archivo(nombre, data):
         for x in sorted(data):
             f.write(x + "\n")
 
-# ================= DATOS =================df = pd.read_excel(
+# ================= DATOS =================
+df = pd.read_excel(
     ruta_archivo("SK.xlsx"),
     usecols=[0, 1],
     names=["ingrediente", "efecto"],
